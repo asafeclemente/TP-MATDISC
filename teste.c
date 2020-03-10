@@ -18,10 +18,7 @@ typedef struct{
 	int y;
 }pairs;
 
-pairs* teste_reflexiva (int** matrix, int quantidade){
-
-	pairs *pares_ausentes;
-	pares_ausentes = (pairs*) calloc((quantidade+1), sizeof(int*));
+int teste_reflexiva (int** matrix, int quantidade, pairs* ausentes_reflexiva){
 
 	int contador = 0;
 
@@ -29,23 +26,17 @@ pairs* teste_reflexiva (int** matrix, int quantidade){
 		for (int j=0;  j < quantidade; j++){
 			if (i == j){
 				if (matrix[i][j] == 0){
-					pares_ausentes[contador].x = i;
-					pares_ausentes[contador].y = j;
+					ausentes_reflexiva[contador].x = i;
+					ausentes_reflexiva[contador].y = j;
 					contador++;
 				}
 			}
 		}
 	}
-	pares_ausentes[quantidade+1].x = contador;
-	//printf("REFLEXIVA| quantidade: %d, contador: %d\n", quantidade, contador);
-	//printf("pares_ausentes[quantidade+1].x = %d \n\n\n",pares_ausentes[quantidade+1].x);
-	return pares_ausentes;
+	return contador;
 }
 
-pairs* teste_irreflexiva (int** matrix, int quantidade){
-
-	pairs *pares_presentes;
- 	pares_presentes = (pairs*) calloc((quantidade+1), sizeof(int*));
+int teste_irreflexiva (int** matrix, int quantidade, pairs* presentes_ireflexiva){
 
 	int contador = 0;
 
@@ -53,48 +44,36 @@ pairs* teste_irreflexiva (int** matrix, int quantidade){
 		for (int j=0;  j < quantidade; j++){
 			if (i == j){
 				if (matrix[i][j] == 1){
-					pares_presentes[contador].x = i;
-					pares_presentes[contador].y = j;
+					presentes_ireflexiva[contador].x = i;
+					presentes_ireflexiva[contador].y = j;
 					contador++;
 				}
 			}
 		}
 	}
-	pares_presentes[quantidade+1].x = contador; 
-	//printf("IREFLEXIVA| quantidade: %d, contador: %d\n", quantidade, contador);
-	//printf("pares_presentes[quantidade+1].x = %d \n\n\n", pares_presentes[quantidade+1].x);
-	return pares_presentes;
+	return contador;
 }
 
-pairs* teste_simetrica (int** matrix, int quantidade){
-
-	printf("\nentrei");
-	pairs pares_ausentes[quantidade+1];
-	//pares_ausentes = (pairs*) calloc((quantidade+1), sizeof(int*));
+int teste_simetrica (int** matrix, int quantidade, pairs* ausentes_simetrica){
 
 	int contador = 0;
-	printf ("\naloco dentro da função\n");
+	printf("teste_simetrica");
 	for(int i=0; i < quantidade; i++){
 		for (int j=0;  j < quantidade; j++){
 				if (matrix[i][j] != matrix[j][i]){
 					if(matrix[i][j]==0){
-						pares_ausentes[contador].x =i;
-						pares_ausentes[contador].y = j;
+						ausentes_simetrica[contador].x =i;
+						ausentes_simetrica[contador].y = j;
 						contador++;
 					}
 				}
 		}
 	}
-	pares_ausentes[quantidade+1].x = contador; 
-	printf("\npares_ausentes: %d\n", pares_ausentes[quantidade+1].x);
-
-	return pares_ausentes;
+	printf("contador");
+	return contador;
 }
 
-pairs *teste_anti_simetrica (int** matrix, int quantidade){
-
-	pairs *pares_presentes;
- 	pares_presentes = (pairs*) calloc((quantidade+1), sizeof(int*));
+int teste_anti_simetrica (int** matrix, int quantidade, pairs* presentes_anti_reflexiva){
 
 	int contador = 0;
 
@@ -105,16 +84,14 @@ pairs *teste_anti_simetrica (int** matrix, int quantidade){
 				}
 				else if (matrix[i][j] == matrix[j][i]){
 					if(matrix[i][j] == 1){
-						pares_presentes[contador].x = i;
-						pares_presentes[contador].y = j;
+						presentes_anti_reflexiva[contador].x = i;
+						presentes_anti_reflexiva[contador].y = j;
 						contador++;
 					}
 				}
 		}
 	}
-	pares_presentes[quantidade+1].x = contador; 
-	
-	return pares_presentes;
+	return contador;
 }
 
 int main (int argc, char* argv[]){
@@ -161,7 +138,7 @@ int main (int argc, char* argv[]){
 	int i = 0;
 	while (!feof(file)){
 		fscanf (file, "%d %d", &pair[i].x, &pair[i].y);
-		printf ("%d %d\n", pair[i].x, pair[i].y);
+		//printf ("%d %d\n", pair[i].x, pair[i].y);
 		i++;  	
 	} // lendo os pares ordenados
 
@@ -174,6 +151,7 @@ int main (int argc, char* argv[]){
 	}// preenchendo a matriz de adjacencia
 
 	//para printar a matriz testando
+	printf("\n");
 	for (int j=0; j < quantidade; j++){
 		for (int k=0; k < quantidade; k++){
 			printf(" %d ", matrix [j][k]);
@@ -183,67 +161,77 @@ int main (int argc, char* argv[]){
 
 	printf("Propriedades\n");
 
-	pairs *ausentes_reflexiva = teste_reflexiva (matrix, quantidade);
 
-	//printf ("ausentes_reflexiva[quantidade+1].x: %d\n",ausentes_reflexiva[quantidade+1].x);
-	if (ausentes_reflexiva[quantidade+1].x == 0){
+	pairs *ausentes_reflexiva;
+	ausentes_reflexiva = (pairs*) calloc(quantidade, sizeof(int*));
+	int cont_reflexiva = teste_reflexiva (matrix, quantidade, ausentes_reflexiva);
+
+	if (cont_reflexiva == 0){
 		printf ("1. Reflexiva: V\n");
 	}
 	else{
 		printf ("1. Reflexiva: F\n   ");
 		i = 0;
-		while (ausentes_reflexiva[quantidade+1].x != 0){
+		while (cont_reflexiva != 0){
 			printf ("(%d %d); ",ausentes_reflexiva[i].x + numero_inicial, ausentes_reflexiva[i].y + numero_inicial);
-			ausentes_reflexiva[quantidade+1].x --;
+			cont_reflexiva--;
 			i++;
 		}
 		printf("\n");
 	} // Reflexiva
+	free(ausentes_reflexiva);
 
-	pairs *presentes_irreflexiva = teste_irreflexiva (matrix, quantidade);
 
- 	//printf ("presentes_ireflexiva[quantidade+1].x: %d\n",presentes_irreflexiva[quantidade+1].x);
-	if (presentes_irreflexiva[quantidade+1].x == 0){
+	pairs *presentes_irreflexiva;
+	presentes_irreflexiva = (pairs*) calloc(quantidade, sizeof(int*));
+	int cont_irreflexiva = teste_irreflexiva (matrix, quantidade, presentes_irreflexiva);
+
+	if (cont_irreflexiva == 0){
 		printf ("2. Irreflexiva: V\n");
 	}
 	else{
 		printf ("2. Irreflexiva: F\n   ");
 		i = 0;
-		while (presentes_irreflexiva[quantidade+1].x != 0){
+		while (cont_irreflexiva != 0){
+			printf ("\ncont_irreflexiva: %d\n", cont_irreflexiva);
 			printf ("(%d %d); ",presentes_irreflexiva[i].x + numero_inicial, presentes_irreflexiva[i].y + numero_inicial);
-			presentes_irreflexiva[quantidade+1].x --;
+			cont_irreflexiva --;
 			i++;
 		}
 		printf("\n");
 	} // Irreflexiva
 
-	printf ("teste");
-	pairs *ausentes_simetrica = teste_simetrica (matrix, quantidade);
+
+	printf("teste");
+	pairs *ausentes_simetrica;
+	ausentes_simetrica = (pairs*) calloc(quantidade, sizeof(int*));
+	int cont_simetrica = teste_simetrica (matrix, quantidade, ausentes_simetrica);
 	
- 	printf ("ausentes_simetrica[quantidade+1].x: %d\n",ausentes_simetrica[quantidade+1].x);
- 	if (ausentes_simetrica[quantidade+1].x == 0){
+	printf ("cont_simetrica: %d",cont_simetrica);
+ 	if (cont_simetrica == 0){
 		printf ("2. Simetrica: V\n");
 	}
 	else{
 		printf ("2. Simetrica: F\n   ");
 		i = 0;
-		while (ausentes_simetrica[quantidade+1].x != 0){
+		while (cont_simetrica != 0){
 			printf ("(%d %d); ",ausentes_simetrica[i].x + numero_inicial, ausentes_simetrica[i].y + numero_inicial);
-			ausentes_simetrica[quantidade+1].x --;
+			cont_simetrica --;
 			i++;
 		}
 		printf("\n");
 	} // Simetrica
 
+/* 
 
-	
-	//pairs *presentes_anti_simetrica = teste_anti_simetrica (matrix, quantidade);
+	pairs *presentes_anti_simetrica = (pairs*) calloc(quantidade, sizeof(int*));
+	int cont_anti_simetrica = teste_anti_simetrica (matrix, quantidade, presentes_anti_simetrica);
 
-/* 	if (presentes_anti_simetrica[quantidade+1].x == 0){
-		printf ("\n2. Anti-simetrica: V\n");
+ 	if (presentes_anti_simetrica[quantidade+1].x == 0){
+		printf ("2. Anti-simetrica: V\n");
 	}
 	else{
-		printf ("\n2. Anti-simetrica: F\n   ");
+		printf ("2. Anti-simetrica: F\n   ");
 		i = 0;
 		while (presentes_anti_simetrica[quantidade+1].x != 0){
 			printf ("(%d %d); ",presentes_anti_simetrica[i].x + numero_inicial, presentes_anti_simetrica[i].y + numero_inicial);
@@ -251,7 +239,12 @@ int main (int argc, char* argv[]){
 			i++;
 		}
 		printf("\n");
-	} // Anti_simetrica  */
+	} // Anti_simetrica
+ */
+
+
+
+
 
     return 0;
 }

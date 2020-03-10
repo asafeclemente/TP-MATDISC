@@ -1,0 +1,18 @@
+Na parte inicial do projeto está lidar com o arquivo e transmitir para o progamas as entradas que foram passadas. Usei arguementos da linha de comando para receber os nomes dos arquivos.
+Para lidar com os numeros da entrada usei uma struct chamada "pairs", composta por dois dados do tipo int (X, Y), primeiro e segundo número. Essa notação será usada armazenar as relações binarias em uma matriz de adjacencia. Os pares / relações foram guardados em um vetor do tipo struct criada para posteriormente preencher a matriz com relação aos presentes
+
+Preenchimento da matriz de adjacencia:
+OBS: Como as entradas não começam do "0" (como na matriz, que siginificaria a primeira linha ou coluna) foi necessario guardar o número inicial em uma variável pra depois, ao preencher a matriz, acessarmos a posição correspondende. Isso é valido já que as proximas entradas serão consecutivas.
+Para o preenchimento o progama percorre o vetor tipo "pairs" e coloca 1 nas posições da matriz correspondente. (A matriz foi iniciada com todas as posições nulas)
+
+Para o teste de cada propriedade criei uma função que vai determinar se os pares ordenados satisfazem, e em caso negativo vai indicar quais são aqueles que deveriam estar presentes ou os que estão ausente para fazer a propriedade valer.
+
+reflexiva: Para determinar se o conjunto de pares (A) satisfaz a propriedade reflexiva foi necessário checar se na matriz de adjacencia todos os elementos na diagonal principal (que no grafo representa o elemento ter releção com ele mesmo (x,x)) tem relação, são iguais a 1.
+
+irreflexiva: Nessa relação, assim como na reflexiva, os pares importantes são aqueles da diagonal principal (x,x). Na matriz, todos os numeros de indices (i,j) devem ser ser iguais a 0 para que a propriedade de irreflexibilidade seja satisfeita.
+
+simétrica: Na simetria se (x,y) pertencem a R (conjunto das relações), ou seja, tem valor 1 na matriz, (y,x) deve ter valor 0 na matriz de adjacencia. O mesmo vale para (y,x), se pertece, (valor 1), (x,y) deve ter valor 0. Para chegar essa propriedade basta verificar se o elemento (i,j) é igual ao (j,i), em caso positivo, o que tem valor 0 (dentre (i,j) e (j,i))é um par ausente para que a relação seja verdadeira.
+
+anti-simétrica: Para determinar a validade dessa propriedade 
+assimétrica 
+transitiva
